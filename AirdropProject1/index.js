@@ -20,7 +20,7 @@ const secretKey = Wallet._keypair.secretKey
 
 const getWalletBalance = async() => {
     try{
-        const connection = new Connection(clusterApiUrl('devnet'), 'confirmed')
+        const connection = new Connection(clusterApiUrl('devnet'), 'confirmed') // connection object
         const walletBalance = await connection.getBalance(publicKey);
 
         console.log(`Wallet Balance is ${walletBalance}`)
@@ -29,7 +29,25 @@ const getWalletBalance = async() => {
     }
 }
 
+// function to drop solana money into our wallet:
+// 1 Sol = 10,000,000,000 Lamp_Ports
+const AirDropSol = async() => {
+    try{
+        const connection = new Connection(clusterApiUrl('devnet'), 'confirmed')
+
+        const FromAirDropSignature = await connection.requestAirdrop(publicKey, 2*LAMPORTS_PER_SOL)
+        // confirming transcation:
+        await connection.confirmTransaction(FromAirDropSignature)
+
+    }catch(err){
+        console.log(err)
+    }
+}
+
 const main = async() => {
+    await getWalletBalance()
+    await AirDropSol()
+
     await getWalletBalance()
 }
 
